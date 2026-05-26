@@ -4,7 +4,6 @@ import (
 	"errors"
 	"io"
 	"net/http"
-	"runtime"
 	"time"
 )
 
@@ -52,50 +51,16 @@ var (
 type XMLCharDecoder func(charset string, input io.Reader) (io.Reader, error)
 
 func addRedirectFunctionality(client *http.Client, ro *RequestOptions) {
-	if client.CheckRedirect != nil {
-		return
-	}
-	client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
-
-		if ro.RedirectLimit < 0 {
-			return http.ErrUseLastResponse
-		}
-
-		if ro.RedirectLimit == 0 {
-			ro.RedirectLimit = RequestRedirectLimit
-		}
-
-		if len(via) >= ro.RedirectLimit {
-			return ErrRedirectLimitExceeded
-		}
-
-		if ro.SensitiveHTTPHeaders == nil {
-			ro.SensitiveHTTPHeaders = RequestSensitiveHTTPHeaders
-		}
-
-		for k, vv := range via[0].Header {
-			// Is this a sensitive header?
-			if _, found := ro.SensitiveHTTPHeaders[k]; found {
-				continue
-			}
-
-			for _, v := range vv {
-				req.Header.Add(k, v)
-			}
-		}
-
-		return nil
-	}
+	_ = "STUB: not implemented"
+	return
 }
+
+// Is this a sensitive header?
 
 // EnsureTransporterFinalized will ensure that when the HTTP client is GCed
 // the runtime will close the idle connections (so that they won't leak)
 // this function was adopted from Hashicorp's go-cleanhttp package
-func EnsureTransporterFinalized(httpTransport *http.Transport) {
-	runtime.SetFinalizer(&httpTransport, func(transportInt **http.Transport) {
-		(*transportInt).CloseIdleConnections()
-	})
-}
+func EnsureTransporterFinalized(httpTransport *http.Transport) { _ = "STUB: not implemented"; return }
 
 // EnsureResponseFinalized will ensure that when the Response is GCed
 // the request body is closed so we aren't leaking fds

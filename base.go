@@ -7,7 +7,8 @@ import "context"
 //  1. A URL
 //  2. A set of options for the request
 func Get(ctx context.Context, url string, options ...Option) (*Response, error) {
-	return Request(ctx, "GET", url, options...)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // Put takes 2 parameters and returns a Response struct. These two options are:
@@ -16,7 +17,8 @@ func Get(ctx context.Context, url string, options ...Option) (*Response, error) 
 //
 // If you do not intend to use the `RequestOptions` you can just pass nil
 func Put(ctx context.Context, url string, options ...Option) (*Response, error) {
-	return Request(ctx, "PUT", url, options...)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // Patch takes 2 parameters and returns a Response struct. These two options are:
@@ -25,7 +27,8 @@ func Put(ctx context.Context, url string, options ...Option) (*Response, error) 
 //
 // If you do not intend to use the `RequestOptions` you can just pass nil
 func Patch(ctx context.Context, url string, options ...Option) (*Response, error) {
-	return Request(ctx, "PATCH", url, options...)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // Delete takes 2 parameters and returns a Response struct. These two options are:
@@ -34,7 +37,8 @@ func Patch(ctx context.Context, url string, options ...Option) (*Response, error
 //
 // If you do not intend to use the `RequestOptions` you can just pass nil
 func Delete(ctx context.Context, url string, options ...Option) (*Response, error) {
-	return Request(ctx, "DELETE", url, options...)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // Post takes 2 parameters and returns a Response channel. These two options are:
@@ -43,7 +47,8 @@ func Delete(ctx context.Context, url string, options ...Option) (*Response, erro
 //
 // If you do not intend to use the `RequestOptions` you can just pass nil
 func Post(ctx context.Context, url string, options ...Option) (*Response, error) {
-	return Request(ctx, "POST", url, options...)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // Head takes 2 parameters and returns a Response channel. These two options are:
@@ -52,7 +57,8 @@ func Post(ctx context.Context, url string, options ...Option) (*Response, error)
 //
 // If you do not intend to use the `RequestOptions` you can just pass nil
 func Head(ctx context.Context, url string, options ...Option) (*Response, error) {
-	return Request(ctx, "HEAD", url, options...)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // Options takes 2 parameters and returns a Response struct. These two options are:
@@ -61,7 +67,8 @@ func Head(ctx context.Context, url string, options ...Option) (*Response, error)
 //
 // If you do not intend to use the `RequestOptions` you can just pass nil
 func Options(ctx context.Context, url string, options ...Option) (*Response, error) {
-	return Request(ctx, "OPTIONS", url, options...)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // Request takes 3 parameters and returns a Response Struct. These three options are:
@@ -71,12 +78,6 @@ func Options(ctx context.Context, url string, options ...Option) (*Response, err
 //
 // If you do not intend to use the `RequestOptions` you can just pass nil
 func Request(ctx context.Context, verb, url string, options ...Option) (*Response, error) {
-	ro := &RequestOptions{}
-	for _, opt := range options {
-		opt.Apply(ro)
-	}
-	if ctx != nil {
-		ro.Context = ctx
-	}
-	return DoRegularRequest(verb, url, ro)
+	_ = "STUB: not implemented"
+	return nil, nil
 }

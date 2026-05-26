@@ -2,11 +2,8 @@ package grequests
 
 import (
 	"bytes"
-	"encoding/json"
-	"encoding/xml"
 	"io"
 	"net/http"
-	"os"
 )
 
 // Response is what is returned to a user when they fire off a request
@@ -32,176 +29,62 @@ type Response struct {
 }
 
 func buildResponse(resp *http.Response, err error) (*Response, error) {
+	_ = "STUB: not implemented"
 	// If the connection didn't succeed we just return a blank response
-	if err != nil {
-		return &Response{Error: err}, err
-	}
-
-	goodResp := &Response{
-		// If your code is within the 2xx range – the response is considered `Ok`
-		Ok:                 resp.StatusCode >= 200 && resp.StatusCode < 300,
-		Error:              nil,
-		RawResponse:        resp,
-		StatusCode:         resp.StatusCode,
-		Header:             resp.Header,
-		internalByteBuffer: bytes.NewBuffer([]byte{}),
-	}
-	// EnsureResponseFinalized(goodResp) This will come back in 1.0
-	return goodResp, nil
+	return nil, nil
 }
+
+// If your code is within the 2xx range – the response is considered `Ok`
+
+// EnsureResponseFinalized(goodResp) This will come back in 1.0
 
 // Read is part of our ability to support io.ReadCloser if someone wants to make use of the raw body
-func (r *Response) Read(p []byte) (n int, err error) {
-
-	if r.Error != nil {
-		return -1, r.Error
-	}
-
-	return r.RawResponse.Body.Read(p)
-}
+func (r *Response) Read(p []byte) (n int, err error) { _ = "STUB: not implemented"; return 0, nil }
 
 // Close is part of our ability to support io.ReadCloser if someone wants to make use of the raw body
-func (r *Response) Close() error {
-
-	if r.Error != nil {
-		return r.Error
-	}
-
-	if _, err := io.Copy(io.Discard, r); err != nil && err != io.EOF {
-		return err
-	}
-	return r.RawResponse.Body.Close()
-}
+func (r *Response) Close() error { _ = "STUB: not implemented"; return nil }
 
 // DownloadToFile allows you to download the contents of the response to a file
-func (r *Response) DownloadToFile(fileName string) error {
+func (r *Response) DownloadToFile(fileName string) error { _ = "STUB: not implemented"; return nil }
 
-	if r.Error != nil {
-		return r.Error
-	}
-
-	fd, err := os.Create(fileName)
-
-	if err != nil {
-		return err
-	}
-
-	defer func() { _ = r.Close() }() // This is a noop if we use the internal ByteBuffer
-	defer func() { _ = fd.Close() }()
-
-	if _, err := io.Copy(fd, r.getInternalReader()); err != nil && err != io.EOF {
-		return err
-	}
-
-	return nil
-}
+// This is a noop if we use the internal ByteBuffer
 
 // getInternalReader because we implement io.ReadCloser and optionally hold a large buffer of the response (created by
 // the user's request)
-func (r *Response) getInternalReader() io.Reader {
-
-	if r.internalByteBuffer.Len() != 0 {
-		return r.internalByteBuffer
-	}
-	return r
-}
+func (r *Response) getInternalReader() io.Reader { _ = "STUB: not implemented"; return *new(io.Reader) }
 
 // XML is a method that will populate a struct that is provided `userStruct` with the XML returned within the
 // response body
 func (r *Response) XML(userStruct interface{}, charsetReader XMLCharDecoder) error {
-
-	if r.Error != nil {
-		return r.Error
-	}
-
-	xmlDecoder := xml.NewDecoder(r.getInternalReader())
-
-	if charsetReader != nil {
-		xmlDecoder.CharsetReader = charsetReader
-	}
-
-	defer func() { _ = r.Close() }()
-
-	return xmlDecoder.Decode(&userStruct)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // JSON is a method that will populate a struct that is provided `userStruct` with the JSON returned within the
 // response body
-func (r *Response) JSON(userStruct interface{}) error {
-
-	if r.Error != nil {
-		return r.Error
-	}
-
-	jsonDecoder := json.NewDecoder(r.getInternalReader())
-	defer func() { _ = r.Close() }()
-
-	return jsonDecoder.Decode(&userStruct)
-}
+func (r *Response) JSON(userStruct interface{}) error { _ = "STUB: not implemented"; return nil }
 
 // createResponseBytesBuffer is a utility method that will populate the internal byte reader – this is largely used for .String()
 // and .Bytes()
 func (r *Response) populateResponseByteBuffer() {
+	_ = "STUB: not implemented"
 
 	// Have I done this already?
-	if r.internalByteBuffer.Len() != 0 {
-		return
-	}
-
-	defer func() { _ = r.Close() }()
-
-	// Is there any content?
-	if r.RawResponse.ContentLength == 0 {
-		return
-	}
-
-	// Did the server tell us how big the response is going to be?
-	if r.RawResponse.ContentLength > 0 {
-		r.internalByteBuffer.Grow(int(r.RawResponse.ContentLength))
-	}
-
-	if _, err := io.Copy(r.internalByteBuffer, r); err != nil && err != io.EOF {
-		r.Error = err
-		_ = r.RawResponse.Body.Close()
-	}
-
+	return
 }
+
+// Is there any content?
+
+// Did the server tell us how big the response is going to be?
 
 // Bytes returns the response as a byte array
-func (r *Response) Bytes() []byte {
+func (r *Response) Bytes() []byte { _ = "STUB: not implemented"; return nil }
 
-	if r.Error != nil {
-		return nil
-	}
-
-	r.populateResponseByteBuffer()
-
-	// Are we still empty?
-	if r.internalByteBuffer.Len() == 0 {
-		return nil
-	}
-	return r.internalByteBuffer.Bytes()
-
-}
+// Are we still empty?
 
 // String returns the response as a string
-func (r *Response) String() string {
-	if r.Error != nil {
-		return ""
-	}
-
-	r.populateResponseByteBuffer()
-
-	return r.internalByteBuffer.String()
-}
+func (r *Response) String() string { _ = "STUB: not implemented"; return "" }
 
 // ClearInternalBuffer is a function that will clear the internal buffer that we use to hold the .String() and .Bytes()
 // data. Once you have used these functions – you may want to free up the memory.
-func (r *Response) ClearInternalBuffer() {
-
-	if r == nil || r.internalByteBuffer == nil {
-		return
-	}
-
-	r.internalByteBuffer.Reset()
-}
+func (r *Response) ClearInternalBuffer() { _ = "STUB: not implemented"; return }
